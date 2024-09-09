@@ -1,3 +1,9 @@
+:root {
+    --blue-color: #06f;
+    --sidebar-font-size: 1.2rem;
+    --sidebar-font-weight: 500;
+}
+
 html,
 body {
     height: 100%;
@@ -38,7 +44,8 @@ h1:before {
 }
 
 h2 {
-    margin: 1rem;
+    font-size: 1.5rem;
+    margin: 0.5rem 1rem;
 }
 
 ul {
@@ -60,27 +67,39 @@ button {
     height: 100%;
 }
 
-#projects {
+#sidebar {
     box-shadow: 0 0rem 0.5rem black;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 1rem 0;
 }
 
-.project {
+#sidebar-nav-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-item {
     align-items: center;
     box-sizing: border-box;
     display: flex;
-    justify-content: space-between;
+    font-size: var(--sidebar-font-size);
+    font-weight: var(--sidebar-font-weight);
     height: 2.5rem;
     padding: 0 1rem;
     transition: 0.3s;
     width: 100%;
 }
 
-.project:hover {
+.sidebar-item:hover {
     background-color: rgb(147, 190, 255);
     cursor: pointer;
+}
+
+.project {
+    justify-content: space-between;
 }
 
 .proj-btns {
@@ -113,7 +132,7 @@ button {
 #new-project {
     align-items: center;
     align-self: center;
-    background-color: #06f;
+    background-color: var(--blue-color);
     border: none;
     border-radius: 0.5rem;
     color: white;
@@ -122,14 +141,13 @@ button {
     font-weight: 600;
     gap: 0.3rem;
     justify-content: center;
-    margin-bottom: 1rem;
     padding: 0.2rem 1rem;
     transition: 0.3s;
     width: 90%;
 }
 
 #new-project:hover {
-    box-shadow: 0rem 0rem 0.2rem black;
+    box-shadow: 0rem 0rem 0.5rem var(--blue-color);
     opacity: 0.9;
 }
 
@@ -189,7 +207,7 @@ button {
 }
 
 #new-item {
-    background-color: #06f;
+    background-color: var(--blue-color);
     border: none;
     border-radius: 50%;
     bottom: 1rem;
@@ -204,6 +222,6 @@ button {
 }
 
 #new-item:hover {
-    box-shadow: 0rem 0rem 0.2rem black;
+    box-shadow: 0rem 0rem 0.5rem var(--blue-color);
     opacity: 0.9;
 }

@@ -10,17 +10,35 @@
         <h1>TodoFlow</h1>
     </header>
     <div id="content-container">
-        <div id="projects">
-            <h2>Projects</h2>
-            <ul>
-                <li class="project">
-                    <span class="proj-name">General</span>
-                    <span class="proj-btns">
-                        <button class="proj-btn edit"></button>
-                        <button class="proj-btn delete"></button>
-                    </span>
-                </li>
-            </ul>
+        <div id="sidebar">
+            <div id="sidebar-nav-items">
+                <div>
+                    <ul>
+                        <li class="sidebar-item">All</li>
+                        <li class="sidebar-item">Today</li>
+                        <li class="sidebar-item">This Week</li>
+                    </ul>
+                </div>
+                <div>
+                    <h2>Projects</h2>
+                    <ul>
+                        <li class="sidebar-item project">
+                            <span class="proj-name">General</span>
+                            <span class="proj-btns">
+                                <button class="proj-btn edit"></button>
+                                <button class="proj-btn delete"></button>
+                            </span>
+                        </li>
+                        <li class="sidebar-item project">
+                            <span class="proj-name">Home</span>
+                            <span class="proj-btns">
+                                <button class="proj-btn edit"></button>
+                                <button class="proj-btn delete"></button>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
             <button id="new-project"><span>+</span>New Project</button>
         </div>
         <div id="items">
