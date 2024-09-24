@@ -1,5 +1,9 @@
-export function Project(name) {
+export function Project(name, id) {
     let tasks = [];
+
+    const getID = () => id;
+
+    const getTasks = () => tasks;
 
     const addTask = (task) => {
         tasks.push(task);
@@ -10,10 +14,16 @@ export function Project(name) {
         tasks.splice(index, 1);
     };
 
+    const removeAllTasks = () => {
+        tasks = [];
+    }
+
     return {
         name,
-        tasks,
+        getID,
+        getTasks,
         addTask,
-        removeTask
+        removeTask,
+        removeAllTasks
     }
 };
