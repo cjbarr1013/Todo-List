@@ -14,21 +14,18 @@ export function UI() {
     const task5 = Task("Fifth Task", "this is the description", new Date(2024, 8, 19), "med", "task-5");
     const task6 = Task("Sixth Task", "this is the description", new Date(2024, 8, 28), "med", "task-6");
     const task7 = Task("Seventh Task", "this is the description", new Date(2024, 8, 26), "low", "task-7");
-    const project1 = Project("General", "proj-1");
-    const project2 = Project("Work", "proj-2");
-    const project3 = Project("Home", "proj-3");
 
-    taskManager.addProject(project1);
-    taskManager.addProject(project2);
-    taskManager.addProject(project3);
+    taskManager.addProject("General");
+    taskManager.addProject("Work");
+    taskManager.addProject("Home");
 
-    taskManager.addTask(task1, project1);
-    taskManager.addTask(task2, project1);
-    taskManager.addTask(task3, project1);
-    taskManager.addTask(task4, project2);
-    taskManager.addTask(task5, project2);
-    taskManager.addTask(task6, project3);
-    taskManager.addTask(task7, project3);
+    taskManager.addTask(task1, "proj-1");
+    taskManager.addTask(task2, "proj-1");
+    taskManager.addTask(task3, "proj-1");
+    taskManager.addTask(task4, "proj-2");
+    taskManager.addTask(task5, "proj-2");
+    taskManager.addTask(task6, "proj-3");
+    taskManager.addTask(task7, "proj-3");
 
     const initConstButtons = () => {
         const byDueDate = document.querySelectorAll(".by-due-date");
@@ -36,6 +33,7 @@ export function UI() {
             item.addEventListener("click", () => {
                 activeSidebarID = item.id;
                 displayTasks();
+                initTaskButtons();
             });
         });
 
@@ -43,7 +41,12 @@ export function UI() {
         newTask.addEventListener("click", openNewTaskPopup);
 
         const newProject = document.querySelector("#new-project");
-        newProject.addEventListener("click", openNewProjectPopup);
+        newProject.addEventListener("click", () => {
+            if (!checkIfIDExists("proj-name")) {
+                openNewProjectPopup();
+                document.querySelector("#proj-name").focus();
+            }
+        });
     };
 
     const initProjectButtons = () => {
@@ -52,6 +55,7 @@ export function UI() {
             project.addEventListener("click", () => {
                 activeSidebarID = project.id;
                 displayTasks();
+                initTaskButtons();
             });
         });
 
@@ -88,11 +92,61 @@ export function UI() {
         initTaskButtons();
     };
 
-    const openNewTaskPopup = () => {
-
+    const checkIfIDExists = (id) => {
+        return document.getElementById(id) !== null;
     };
 
     const openNewProjectPopup = () => {
+        const projectsDiv = document.querySelector("#projects");
+
+        const listItem = document.createElement("li");
+        listItem.classList.add("add-sidebar-item");
+
+        const projectInput = document.createElement("input");
+        projectInput.type = "text";
+        projectInput.id = "proj-name";
+
+        const buttonGroup = document.createElement("span");
+        buttonGroup.classList.add("btn-grp");
+
+        const confirmButton = document.createElement("button");
+        confirmButton.classList.add("icon-btn");
+        confirmButton.classList.add("confirm");
+        confirmButton.classList.add("proj-confirm");
+        confirmButton.addEventListener("click", () => {
+            confirmNewProject(projectInput.value);
+        });
+
+        const cancelButton = document.createElement("button");
+        cancelButton.classList.add("icon-btn");
+        cancelButton.classList.add("cancel");
+        cancelButton.classList.add("proj-cancel");
+        cancelButton.addEventListener("click", cancelNewProject);
+
+        buttonGroup.appendChild(confirmButton);
+        buttonGroup.appendChild(cancelButton);
+
+        listItem.appendChild(projectInput);
+        listItem.appendChild(buttonGroup);
+
+        projectsDiv.appendChild(listItem);
+    };
+
+    const confirmNewProject = (name) => {
+        taskManager.addProject(name);
+        displayProjects();
+        initProjectButtons();
+    };
+
+    const cancelNewProject = () => {
+        document.querySelector(".add-sidebar-item").remove();
+    };
+
+    const openEditProjectPopup = () => {
+
+    };
+
+    const openNewTaskPopup = () => {
 
     };
 
@@ -100,20 +154,22 @@ export function UI() {
 
     };
 
-    const openEditProjectPopup = () => {
+    const confirmNewTask = () => {
+        
+    };
 
+    const cancelNewTask = () => {
+        
     };
 
     const deleteTask = (id) => {
         taskManager.deleteTask(id);
-        displayTasks();
-        initTaskButtons();
+        document.querySelector("#" + id).remove();
     };
 
     const deleteProject = (id) => {
         taskManager.deleteProject(id);
-        displayProjects();
-        initProjectButtons();
+        document.querySelector("#" + id).remove();
         displayTasks();
     };
 
@@ -214,5 +270,5 @@ export function UI() {
     initAllButtons();
 };
 
-// Finished delete buttons, maybe look into not having to
-// re-display all tasks and projects upon deletion
+// Work on editing project names
+// then work on adding/editing tasks

@@ -4,6 +4,8 @@ import { isToday, isSameWeek } from "date-fns";
 
 export function Manager() {
     let allProjects = [];
+    let projectIDNumber = 1;
+    let taskIDNumber = 1;
     
     const getAllTasks = () => {
         let allTasks = [];
@@ -45,12 +47,14 @@ export function Manager() {
         return {};
     };
 
-    const addTask = (task, project) => {
+    const addTask = (task, projectID) => {
+        const project = getProjectByID(projectID);
         project.addTask(task);
     };
 
-    const addProject = (project) => {
-        allProjects.push(project);
+    const addProject = (name) => {
+        const id = "proj-" + projectIDNumber++;
+        allProjects.push(Project(name, id));
     };
 
     const editTask = () => {
