@@ -15,7 +15,35 @@ export function Manager() {
 
     const getWeeksTasks = () => getAllTasks().filter((task) => isSameWeek(new Date(), task.dueDate));
 
+    const getTasksByProjectID = (id) => {
+        const tasks = {};
+        switch(id) {
+            case "all":
+                return getAllTasks();
+            case "today":
+                return getTodaysTasks();
+            case "week":
+                return getWeeksTasks();
+            default:
+                for (const project of allProjects) {
+                    if (project.getID() === id) {
+                        return project.getTasks();
+                    };
+                };
+                return [];
+        };
+    };
+
     const getAllProjects = () => allProjects;
+
+    const getProjectByID = (id) => {
+        for (const project of allProjects) {
+            if (project.getID() === id) {
+                return project;
+            };
+        };
+        return {};
+    };
 
     const addTask = (task, project) => {
         project.addTask(task);
@@ -33,20 +61,26 @@ export function Manager() {
 
     };
 
-    const deleteTask = (task, project) => {
-        project.removeTask(task);
+    const deleteTask = (id) => {
+        for (const project of allProjects) {
+            for (const task of project.getTasks()) {
+                if (task.getID() === id) {
+                    project.removeTask(task);
+                    return;
+                };
+            };
+        };
     };
 
-    const deleteProject = (project) => {
-        project.removeAllTasks;
+    const deleteProject = (id) => {
+        const project = getProjectByID(id);
+        project.removeAllTasks();
         const index = allProjects.indexOf(project);
         allProjects.splice(index, 1);
     };
 
     return {
-        getAllTasks,
-        getTodaysTasks,
-        getWeeksTasks,
+        getTasksByProjectID,
         getAllProjects,
         addTask,
         addProject,

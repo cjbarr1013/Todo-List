@@ -14,36 +14,32 @@
             <div id="sidebar-nav-items">
                 <div>
                     <ul>
-                        <li class="sidebar-item">All</li>
-                        <li class="sidebar-item">Today</li>
-                        <li class="sidebar-item">This Week</li>
+                        <li id="all" class="sidebar-item by-due-date">All</li>
+                        <li id="today" class="sidebar-item by-due-date">Today</li>
+                        <li id="week" class="sidebar-item by-due-date">This Week</li>
                     </ul>
                 </div>
                 <div>
                     <h2>Projects</h2>
-                    <ul>
-                        <li class="sidebar-item project">
+                    <ul id="projects">
+                    <!--
+                        <li id="proj-1" class="sidebar-item project">
                             <span class="proj-name">General</span>
                             <span class="btn-grp">
                                 <button class="icon-btn edit proj-edit"></button>
                                 <button class="icon-btn delete proj-delete"></button>
                             </span>
                         </li>
-                        <li class="sidebar-item project">
-                            <span class="proj-name">Home</span>
-                            <span class="btn-grp">
-                                <button class="icon-btn edit proj-edit"></button>
-                                <button class="icon-btn delete proj-delete"></button>
-                            </span>
-                        </li>
+                    -->
                     </ul>
                 </div>
             </div>
             <button id="new-project"><span>+</span>New Project</button>
         </div>
         <div id="tasks">
-            <div class="task">
-                <input type="checkbox" id="task1" name="task1" value="complete">
+        <!--
+            <div id="task-1" class="task">
+                <input type="checkbox" id="task-1" name="task-1" value="complete">
                 <div class="task-box">
                     <span class="title">First item on list</span>
                     <span class="due">9/1/24 12:00pm</span>
@@ -53,6 +49,7 @@
                     <button class="icon-btn delete task-delete"></button>
                 </div>
             </div>
+        -->
         </div>
     </div>
     <button id="new-task">+</button>
