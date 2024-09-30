@@ -60,7 +60,14 @@ export function UI() {
         });
 
         const projectEdit = document.querySelectorAll(".proj-edit");
-        projectEdit.forEach((project) => project.addEventListener("click", openEditProjectPopup));
+        projectEdit.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                const project = button.closest("li.project");
+                openEditProjectPopup(project);
+                document.querySelector("#proj-name").focus();
+                e.stopPropagation();
+            });
+        });
 
         const projectDelete = document.querySelectorAll(".proj-delete");
         projectDelete.forEach((button) => {
@@ -110,17 +117,13 @@ export function UI() {
         buttonGroup.classList.add("btn-grp");
 
         const confirmButton = document.createElement("button");
-        confirmButton.classList.add("icon-btn");
-        confirmButton.classList.add("confirm");
-        confirmButton.classList.add("proj-confirm");
+        confirmButton.classList.add("icon-btn", "confirm", "proj-confirm");
         confirmButton.addEventListener("click", () => {
             confirmNewProject(projectInput.value);
         });
 
         const cancelButton = document.createElement("button");
-        cancelButton.classList.add("icon-btn");
-        cancelButton.classList.add("cancel");
-        cancelButton.classList.add("proj-cancel");
+        cancelButton.classList.add("icon-btn", "cancel", "proj-cancel");
         cancelButton.addEventListener("click", cancelNewProject);
 
         buttonGroup.appendChild(confirmButton);
@@ -142,9 +145,45 @@ export function UI() {
         document.querySelector(".add-sidebar-item").remove();
     };
 
-    const openEditProjectPopup = () => {
+    const openEditProjectPopup = (project) => {
+        project.classList.remove("sidebar-item", "project");
+        project.classList.add("add-sidebar-item");
 
+        const projectName = project.querySelector(".proj-name");
+        const projectInput = document.createElement("input");
+        projectInput.type = "text";
+        projectInput.id = "proj-name";
+        projectName.replaceWith(projectInput);
+
+        const editButton = project.querySelector(".edit");
+        const confirmButton = document.createElement("button");
+        confirmButton.classList.add("icon-btn", "confirm", "proj-confirm");
+        confirmButton.addEventListener("click", (e) => {
+            confirmProjectEdit(projectInput.value, project.id);
+            e.stopPropagation();
+        });
+        editButton.replaceWith(confirmButton);
+
+        const deleteButton = project.querySelector(".delete");
+        const cancelButton = document.createElement("button");
+        cancelButton.classList.add("icon-btn", "cancel", "proj-cancel");
+        cancelButton.addEventListener("click", (e) => {
+            cancelProjectEdit();
+            e.stopPropagation();
+        });
+        deleteButton.replaceWith(cancelButton);
     };
+
+    const confirmProjectEdit = (name, id) => {
+        taskManager.editProject(name, id);
+        displayProjects();
+        initProjectButtons();
+    }
+
+    const cancelProjectEdit = () => {
+        displayProjects();
+        initProjectButtons();
+    }
 
     const openNewTaskPopup = () => {
 
@@ -159,6 +198,14 @@ export function UI() {
     };
 
     const cancelNewTask = () => {
+        
+    };
+
+    const confirmTaskEdit = () => {
+        
+    };
+
+    const cancelTaskEdit = () => {
         
     };
 
@@ -270,5 +317,4 @@ export function UI() {
     initAllButtons();
 };
 
-// Work on editing project names
-// then work on adding/editing tasks
+// Work on adding/editing tasks

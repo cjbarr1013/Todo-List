@@ -61,8 +61,9 @@ export function Manager() {
 
     };
 
-    const editProject = () => {
-
+    const editProject = (newName, id) => {
+        const project = getProjectByID(id);
+        project.name = newName;
     };
 
     const deleteTask = (id) => {
