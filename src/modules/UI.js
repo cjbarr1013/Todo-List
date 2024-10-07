@@ -7,25 +7,17 @@ export function UI() {
     const taskManager = Manager();
     let activeSidebarID = "all";
 
-    const task1 = Task("First Task", "this is the description", new Date(2024, 8, 25), "high", "task-1");
-    const task2 = Task("Second Task", "this is the description", new Date(2024, 8, 30), "med", "task-2");
-    const task3 = Task("Third Task", "this is the description", new Date(2024, 8, 24), "low", "task-3");
-    const task4 = Task("Fourth Task", "this is the description", new Date(2024, 8, 25), "high", "task-4");
-    const task5 = Task("Fifth Task", "this is the description", new Date(2024, 8, 19), "med", "task-5");
-    const task6 = Task("Sixth Task", "this is the description", new Date(2024, 8, 28), "med", "task-6");
-    const task7 = Task("Seventh Task", "this is the description", new Date(2024, 8, 26), "low", "task-7");
-
     taskManager.addProject("General");
     taskManager.addProject("Work");
     taskManager.addProject("Home");
 
-    taskManager.addTask(task1, "proj-1");
-    taskManager.addTask(task2, "proj-1");
-    taskManager.addTask(task3, "proj-1");
-    taskManager.addTask(task4, "proj-2");
-    taskManager.addTask(task5, "proj-2");
-    taskManager.addTask(task6, "proj-3");
-    taskManager.addTask(task7, "proj-3");
+    taskManager.addTask("First Task", new Date(2024, 8, 29), "high", "proj-1", "this is the description");
+    taskManager.addTask("Second Task", new Date(2024, 9, 11), "high", "proj-1", "this is the description");
+    taskManager.addTask("Third Task", new Date(2024, 9, 5), "high", "proj-1", "this is the description");
+    taskManager.addTask("Fourth Task", new Date(2024, 9, 8), "high", "proj-2", "this is the description");
+    taskManager.addTask("Fifth Task", new Date(2024, 9, 4), "high", "proj-2", "this is the description");
+    taskManager.addTask("Sixth Task", new Date(2024, 9, 12), "high", "proj-3", "this is the description");
+    taskManager.addTask("Seventh Task", new Date(2024, 9, 3), "high", "proj-3", "this is the description");
 
     const initConstButtons = () => {
         const byDueDate = document.querySelectorAll(".by-due-date");
@@ -38,7 +30,12 @@ export function UI() {
         });
 
         const newTask = document.querySelector("#new-task");
-        newTask.addEventListener("click", openNewTaskPopup);
+        newTask.addEventListener("click", () => {
+            if (!checkIfIDExists("task-name")) {
+                openNewTaskPopup();
+                document.querySelector("#task-name").focus();
+            }
+        });
 
         const newProject = document.querySelector("#new-project");
         newProject.addEventListener("click", () => {
@@ -112,6 +109,7 @@ export function UI() {
         const projectInput = document.createElement("input");
         projectInput.type = "text";
         projectInput.id = "proj-name";
+        projectInput.required = true;
 
         const buttonGroup = document.createElement("span");
         buttonGroup.classList.add("btn-grp");
@@ -153,6 +151,8 @@ export function UI() {
         const projectInput = document.createElement("input");
         projectInput.type = "text";
         projectInput.id = "proj-name";
+        projectInput.value = projectName.textContent;
+        projectInput.required = true;
         projectName.replaceWith(projectInput);
 
         const editButton = project.querySelector(".edit");
@@ -186,19 +186,129 @@ export function UI() {
     }
 
     const openNewTaskPopup = () => {
+        const tasksDiv = document.querySelector("#tasks");
 
+        const taskDiv = document.createElement("div");
+        taskDiv.classList.add("task", "add-task");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.disabled = "disabled";
+        checkbox.value = "complete";
+
+        const taskBox = document.createElement("form");
+        taskBox.id = "edit-task";
+        taskBox.classList.add("edit-task-box");
+        taskBox.addEventListener("submit", (e) => {
+            confirmNewTask(nameInput.value, dateInput.value, priorityInput.value, 
+                projectInput.value, descriptionInput.value);
+            e.preventDefault();
+        });
+
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.name = "task-name";
+        nameInput.id = "task-name";
+        nameInput.placeholder = "Task name";
+        nameInput.required = true;
+
+        const dateInput = document.createElement("input");
+        dateInput.type = "text";
+        dateInput.name = "task-due";
+        dateInput.id = "task-due";
+        dateInput.placeholder = "Due date";
+        dateInput.setAttribute("onfocus", "(this.type='date')")
+        dateInput.setAttribute("onblur", "(this.type='text')")
+        dateInput.required = true;
+
+        const priorityInput = document.createElement("select");
+        priorityInput.name = "task-priority";
+        priorityInput.id = "task-priority";
+        priorityInput.required = true;
+
+        const defaultPrioityOption = document.createElement("option");
+        defaultPrioityOption.value = "";
+        defaultPrioityOption.textContent = "Choose priority";
+
+        const highOption = document.createElement("option");
+        highOption.value = "high";
+        highOption.textContent = "High";
+
+        const medOption = document.createElement("option");
+        medOption.value = "med";
+        medOption.textContent = "Medium";
+
+        const lowOption = document.createElement("option");
+        lowOption.value = "low";
+        lowOption.textContent = "Low";
+
+        priorityInput.appendChild(defaultPrioityOption);
+        priorityInput.appendChild(highOption);
+        priorityInput.appendChild(medOption);
+        priorityInput.appendChild(lowOption);
+
+        const projectInput = document.createElement("select");
+        projectInput.name = "task-project";
+        projectInput.id = "task-project";
+        projectInput.required = true;
+
+        const defaultProjectOption = document.createElement("option");
+        defaultProjectOption.value = "";
+        defaultProjectOption.textContent = "Choose project";
+        projectInput.appendChild(defaultProjectOption);
+
+        for (const project of taskManager.getAllProjects()) {
+            const projectOption = document.createElement("option");
+            projectOption.value = project.getID();
+            projectOption.textContent = project.name;
+            projectInput.appendChild(projectOption);
+        }
+
+        const descriptionInput = document.createElement("textarea");
+        descriptionInput.name = "task-desc";
+        descriptionInput.id = "task-desc";
+        descriptionInput.placeholder = "Task description";
+
+        taskBox.appendChild(nameInput);
+        taskBox.appendChild(dateInput);
+        taskBox.appendChild(priorityInput);
+        taskBox.appendChild(projectInput);
+        taskBox.appendChild(descriptionInput);
+
+        const buttonGroup = document.createElement("div");
+        buttonGroup.classList.add("btn-grp");
+
+        const confirmButton = document.createElement("button");
+        confirmButton.type = "submit";
+        confirmButton.setAttribute("form", "edit-task");
+        confirmButton.classList.add("icon-btn", "confirm", "task-confirm");
+
+        const cancelButton = document.createElement("button");
+        cancelButton.classList.add("icon-btn", "cancel", "task-cancel");
+        cancelButton.addEventListener("click", cancelNewTask);
+
+        buttonGroup.appendChild(confirmButton);
+        buttonGroup.appendChild(cancelButton);
+
+        taskDiv.appendChild(checkbox);
+        taskDiv.appendChild(taskBox);
+        taskDiv.appendChild(buttonGroup);
+
+        tasksDiv.appendChild(taskDiv);
     };
 
     const openEditTaskPopup = () => {
 
     };
 
-    const confirmNewTask = () => {
-        
+    const confirmNewTask = (name, date, priority, project, description) => {
+        taskManager.addTask(name, date, priority, project, description);
+        displayTasks();
+        initTaskButtons();
     };
 
     const cancelNewTask = () => {
-        
+        document.querySelector(".add-task").remove();
     };
 
     const confirmTaskEdit = () => {
@@ -278,11 +388,11 @@ export function UI() {
             taskBox.classList.add("task-box");
 
             const title = document.createElement("span");
-            title.classList.add("title");
+            title.classList.add("task-name");
             title.textContent = task.title;
 
             const dueDate = document.createElement("span");
-            dueDate.classList.add("due");
+            dueDate.classList.add("task-due");
             dueDate.textContent = format(task.dueDate, "PPP");
 
             taskBox.appendChild(title);

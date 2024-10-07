@@ -47,9 +47,11 @@ export function Manager() {
         return {};
     };
 
-    const addTask = (task, projectID) => {
+    const addTask = (name, due, priority, projectID, description) => {
         const project = getProjectByID(projectID);
-        project.addTask(task);
+        const id = "task-" + taskIDNumber++;
+        const newTask = Task(name, description, due, priority, id)
+        project.addTask(newTask);
     };
 
     const addProject = (name) => {

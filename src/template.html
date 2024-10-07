@@ -33,7 +33,7 @@
                     -->
                     <!--
                         <li class="add-sidebar-item">
-                            <input type="text" id="proj-name">
+                            <input type="text" id="proj-name" required>
                             <span class="btn-grp">
                                 <button class="icon-btn confirm proj-confirm"></button>
                                 <button class="icon-btn cancel proj-cancel"></button>
@@ -50,12 +50,37 @@
             <div id="task-1" class="task">
                 <input type="checkbox" id="task-1" name="task-1" value="complete">
                 <div class="task-box">
-                    <span class="title">First item on list</span>
-                    <span class="due">9/1/24 12:00pm</span>
+                    <span class="task-name">First item on list</span>
+                    <span class="task-due">9/1/24 12:00pm</span>
                 </div>
                 <div class="btn-grp">
                     <button class="icon-btn edit task-edit"></button>
                     <button class="icon-btn delete task-delete"></button>
+                </div>
+            </div>
+        -->
+        <!--
+            <div class="task add-task">
+                <input type="checkbox" id="task-1" name="task-1" disabled="disabled" value="complete">
+                <form id="edit-task" class="edit-task-box">
+                    <input type="text" name="task-name" id="task-name" placeholder="Task name" required>
+                    <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="task-due" id="task-due" placeholder="Due date" required>
+                    <select name="task-priority" id="task-priority" required>
+                        <option value="">Choose priority</option>
+                        <option value="high">High</option>
+                        <option value="med">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                        <option value="">Choose project</option>
+                        <option value="proj-1">General</option>
+                        <option value="proj-2">Work</option>
+                        <option value="proj-3">Home</option>
+                    </select>
+                    <textarea name="task-desc" id="task-desc" placeholder="Task description"></textarea>
+                </form>
+                <div class="btn-grp">
+                    <button type="submit" form="edit-task" class="icon-btn confirm task-confirm"></button>
+                    <button class="icon-btn cancel task-cancel"></button>
                 </div>
             </div>
         -->
