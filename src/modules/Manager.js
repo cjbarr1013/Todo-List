@@ -47,6 +47,20 @@ export function Manager() {
         return {};
     };
 
+    const getTaskByID = (id) => {
+        for (const project of allProjects) {
+            for (const task of project.getTasks()) {
+                if (task.getID() === id) {
+                    return {
+                        "task": task,
+                        "projID": project.getID()
+                    };
+                };
+            };
+        };
+        return {};
+    };
+
     const addTask = (name, due, priority, projectID, description) => {
         const project = getProjectByID(projectID);
         const id = "task-" + taskIDNumber++;
@@ -59,8 +73,23 @@ export function Manager() {
         allProjects.push(Project(name, id));
     };
 
-    const editTask = () => {
+    const editTask = (id, name, due, priority, projectID, description) => {
+        const taskObj = getTaskByID(id);
+        const task = taskObj["task"];
+        const oldProjID = taskObj["projID"];
 
+        task.title = name;
+        task.description = description;
+        task.dueDate = due;
+        task.priority = priority;
+
+        if (oldProjID !== projectID) {
+            const oldProj = getProjectByID(oldProjID);
+            oldProj.removeTask(task);
+
+            const newProj = getProjectByID(projectID);
+            newProj.addTask(task);
+        };
     };
 
     const editProject = (newName, id) => {
@@ -89,6 +118,8 @@ export function Manager() {
     return {
         getTasksByProjectID,
         getAllProjects,
+        getProjectByID,
+        getTaskByID,
         addTask,
         addProject,
         editTask,

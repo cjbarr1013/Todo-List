@@ -12,12 +12,12 @@ export function UI() {
     taskManager.addProject("Home");
 
     taskManager.addTask("First Task", new Date(2024, 8, 29), "high", "proj-1", "this is the description");
-    taskManager.addTask("Second Task", new Date(2024, 9, 11), "high", "proj-1", "this is the description");
-    taskManager.addTask("Third Task", new Date(2024, 9, 5), "high", "proj-1", "this is the description");
+    taskManager.addTask("Second Task", new Date(2024, 9, 11), "med", "proj-1", "this is the description");
+    taskManager.addTask("Third Task", new Date(2024, 9, 5), "med", "proj-1", "this is the description");
     taskManager.addTask("Fourth Task", new Date(2024, 9, 8), "high", "proj-2", "this is the description");
-    taskManager.addTask("Fifth Task", new Date(2024, 9, 4), "high", "proj-2", "this is the description");
+    taskManager.addTask("Fifth Task", new Date(2024, 9, 4), "low", "proj-2", "this is the description");
     taskManager.addTask("Sixth Task", new Date(2024, 9, 12), "high", "proj-3", "this is the description");
-    taskManager.addTask("Seventh Task", new Date(2024, 9, 3), "high", "proj-3", "this is the description");
+    taskManager.addTask("Seventh Task", new Date(2024, 9, 3), "low", "proj-3", "this is the description");
 
     const initConstButtons = () => {
         const byDueDate = document.querySelectorAll(".by-due-date");
@@ -29,19 +29,17 @@ export function UI() {
             });
         });
 
-        const newTask = document.querySelector("#new-task");
+        const newTask = document.querySelector("#new-task-btn");
         newTask.addEventListener("click", () => {
             if (!checkIfIDExists("task-name")) {
-                openNewTaskPopup();
-                document.querySelector("#task-name").focus();
+                handleEditTask(newTask.id);
             }
         });
 
-        const newProject = document.querySelector("#new-project");
+        const newProject = document.querySelector("#new-project-btn");
         newProject.addEventListener("click", () => {
             if (!checkIfIDExists("proj-name")) {
-                openNewProjectPopup();
-                document.querySelector("#proj-name").focus();
+                handleEditProject(newProject.id);
             }
         });
     };
@@ -59,10 +57,11 @@ export function UI() {
         const projectEdit = document.querySelectorAll(".proj-edit");
         projectEdit.forEach((button) => {
             button.addEventListener("click", (e) => {
-                const project = button.closest("li.project");
-                openEditProjectPopup(project);
-                document.querySelector("#proj-name").focus();
-                e.stopPropagation();
+                if (!checkIfIDExists("proj-name")) {
+                    const id = button.closest("li.project").id;
+                    handleEditProject(id);
+                    e.stopPropagation();
+                };
             });
         });
 
@@ -78,7 +77,13 @@ export function UI() {
 
     const initTaskButtons = () => {
         const taskEdit = document.querySelectorAll(".task-edit");
-        taskEdit.forEach((task) => task.addEventListener("click", openEditTaskPopup));
+        taskEdit.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                const id = button.closest("div.task").id;
+                handleEditTask(id);
+                e.stopPropagation();
+            });
+        });
 
         const taskDelete = document.querySelectorAll(".task-delete");
         taskDelete.forEach((button) => {
@@ -100,108 +105,127 @@ export function UI() {
         return document.getElementById(id) !== null;
     };
 
-    const openNewProjectPopup = () => {
-        const projectsDiv = document.querySelector("#projects");
+    const handleEditProject = (id) => {
+        if (id === "new-project-btn") {
+            const projectsDiv = document.querySelector("#projects");
+            projectsDiv.appendChild(getEditProjectHTML("new-project"));
+        } else {
+            const projectDiv = document.querySelector("#" + id);
+            const projectName = taskManager.getProjectByID(id).name;
+            projectDiv.replaceWith(getEditProjectHTML(id, projectName));
+        };
 
-        const listItem = document.createElement("li");
-        listItem.classList.add("add-sidebar-item");
+        document.querySelector("#proj-name").focus();
+    };
+
+    const getEditProjectHTML = (id, projectName = "") => {
+        const formItem = document.createElement("form");
+        formItem.id = id;
+        formItem.classList.add("add-sidebar-item");
+        formItem.addEventListener("submit", (e) => {
+            handleEditProjectSubmit(projectInput.value, id);
+            e.preventDefault();
+        });
 
         const projectInput = document.createElement("input");
         projectInput.type = "text";
         projectInput.id = "proj-name";
         projectInput.required = true;
+        projectInput.value = projectName;
 
         const buttonGroup = document.createElement("span");
         buttonGroup.classList.add("btn-grp");
 
         const confirmButton = document.createElement("button");
+        confirmButton.type = "submit";
+        confirmButton.setAttribute("form", id);
         confirmButton.classList.add("icon-btn", "confirm", "proj-confirm");
-        confirmButton.addEventListener("click", () => {
-            confirmNewProject(projectInput.value);
-        });
 
         const cancelButton = document.createElement("button");
         cancelButton.classList.add("icon-btn", "cancel", "proj-cancel");
-        cancelButton.addEventListener("click", cancelNewProject);
+        cancelButton.addEventListener("click", () => {
+            handleEditProjectCancel(id);
+        });
 
         buttonGroup.appendChild(confirmButton);
         buttonGroup.appendChild(cancelButton);
 
-        listItem.appendChild(projectInput);
-        listItem.appendChild(buttonGroup);
+        formItem.appendChild(projectInput);
+        formItem.appendChild(buttonGroup);
 
-        projectsDiv.appendChild(listItem);
+        return formItem;
+    }
+
+    const handleEditProjectSubmit = (name, id) => {
+        if (id === "new-project") {
+            confirmNewProject(name);
+        } else {
+            confirmEditProject(name, id);
+        };
+
+        displayProjects();
+        initProjectButtons();
+    };
+
+    const handleEditProjectCancel = (id) => {
+        if (id === "new-project") {
+            cancelNewProject();
+        } else {
+            cancelEditProject();
+        };
     };
 
     const confirmNewProject = (name) => {
         taskManager.addProject(name);
-        displayProjects();
-        initProjectButtons();
+    };
+
+    const confirmEditProject = (name, id) => {
+        taskManager.editProject(name, id);
     };
 
     const cancelNewProject = () => {
         document.querySelector(".add-sidebar-item").remove();
     };
 
-    const openEditProjectPopup = (project) => {
-        project.classList.remove("sidebar-item", "project");
-        project.classList.add("add-sidebar-item");
-
-        const projectName = project.querySelector(".proj-name");
-        const projectInput = document.createElement("input");
-        projectInput.type = "text";
-        projectInput.id = "proj-name";
-        projectInput.value = projectName.textContent;
-        projectInput.required = true;
-        projectName.replaceWith(projectInput);
-
-        const editButton = project.querySelector(".edit");
-        const confirmButton = document.createElement("button");
-        confirmButton.classList.add("icon-btn", "confirm", "proj-confirm");
-        confirmButton.addEventListener("click", (e) => {
-            confirmProjectEdit(projectInput.value, project.id);
-            e.stopPropagation();
-        });
-        editButton.replaceWith(confirmButton);
-
-        const deleteButton = project.querySelector(".delete");
-        const cancelButton = document.createElement("button");
-        cancelButton.classList.add("icon-btn", "cancel", "proj-cancel");
-        cancelButton.addEventListener("click", (e) => {
-            cancelProjectEdit();
-            e.stopPropagation();
-        });
-        deleteButton.replaceWith(cancelButton);
+    const cancelEditProject = () => {
+        displayProjects();
+        initProjectButtons();
     };
 
-    const confirmProjectEdit = (name, id) => {
-        taskManager.editProject(name, id);
-        displayProjects();
-        initProjectButtons();
-    }
+    const handleEditTask = (id) => {
+        if (id === "new-task-btn") {
+            const tasksDiv = document.querySelector("#tasks");
+            tasksDiv.appendChild(getEditTaskHTML("new-task"));
+        } else {
+            const taskDiv = document.querySelector("#" + id);
+            const taskObj = taskManager.getTaskByID(id);
+            const task = taskObj["task"];
+            const projID = taskObj["projID"];
+            taskDiv.replaceWith(getEditTaskHTML(id, task.title, task.dueDate,
+                                                task.priority, projID, 
+                                                task.description));
+        };
 
-    const cancelProjectEdit = () => {
-        displayProjects();
-        initProjectButtons();
-    }
+        document.querySelector("#task-name").focus();
+    };
 
-    const openNewTaskPopup = () => {
-        const tasksDiv = document.querySelector("#tasks");
-
+    const getEditTaskHTML = (id, name = "", date = new Date(), priority = "",
+                             project = "", desc = "") => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task", "add-task");
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.disabled = "disabled";
         checkbox.value = "complete";
+        checkbox.disabled = "disabled";
 
         const taskBox = document.createElement("form");
-        taskBox.id = "edit-task";
+        taskBox.id = id;
         taskBox.classList.add("edit-task-box");
         taskBox.addEventListener("submit", (e) => {
-            confirmNewTask(nameInput.value, dateInput.value, priorityInput.value, 
-                projectInput.value, descriptionInput.value);
+            handleEditTaskSubmit(id, nameInput.value, dateInput.value,
+                                 priorityInput.value, projectInput.value,
+                                 descriptionInput.value);
             e.preventDefault();
         });
 
@@ -210,13 +234,14 @@ export function UI() {
         nameInput.name = "task-name";
         nameInput.id = "task-name";
         nameInput.placeholder = "Task name";
+        nameInput.value = name;
         nameInput.required = true;
 
         const dateInput = document.createElement("input");
         dateInput.type = "text";
         dateInput.name = "task-due";
         dateInput.id = "task-due";
-        dateInput.placeholder = "Due date";
+        dateInput.value = format(date, "P");
         dateInput.setAttribute("onfocus", "(this.type='date')")
         dateInput.setAttribute("onblur", "(this.type='text')")
         dateInput.required = true;
@@ -246,6 +271,7 @@ export function UI() {
         priorityInput.appendChild(highOption);
         priorityInput.appendChild(medOption);
         priorityInput.appendChild(lowOption);
+        priorityInput.value = priority;
 
         const projectInput = document.createElement("select");
         projectInput.name = "task-project";
@@ -263,11 +289,13 @@ export function UI() {
             projectOption.textContent = project.name;
             projectInput.appendChild(projectOption);
         }
+        projectInput.value = project;
 
         const descriptionInput = document.createElement("textarea");
         descriptionInput.name = "task-desc";
         descriptionInput.id = "task-desc";
         descriptionInput.placeholder = "Task description";
+        descriptionInput.value = desc;
 
         taskBox.appendChild(nameInput);
         taskBox.appendChild(dateInput);
@@ -280,12 +308,14 @@ export function UI() {
 
         const confirmButton = document.createElement("button");
         confirmButton.type = "submit";
-        confirmButton.setAttribute("form", "edit-task");
+        confirmButton.setAttribute("form", id);
         confirmButton.classList.add("icon-btn", "confirm", "task-confirm");
 
         const cancelButton = document.createElement("button");
         cancelButton.classList.add("icon-btn", "cancel", "task-cancel");
-        cancelButton.addEventListener("click", cancelNewTask);
+        cancelButton.addEventListener("click", () => {
+            handleEditTaskCancel(id);
+        });
 
         buttonGroup.appendChild(confirmButton);
         buttonGroup.appendChild(cancelButton);
@@ -294,29 +324,43 @@ export function UI() {
         taskDiv.appendChild(taskBox);
         taskDiv.appendChild(buttonGroup);
 
-        tasksDiv.appendChild(taskDiv);
+        return taskDiv;
     };
 
-    const openEditTaskPopup = () => {
+    const handleEditTaskSubmit = (taskID, name, date, priority, project, desc) => {
+        if (taskID === "new-task") {
+            confirmNewTask(name, date, priority, project, desc);
+        } else {
+            confirmEditTask(taskID, name, date, priority, project, desc);
+        };
 
+        displayTasks();
+        initTaskButtons();
     };
+
+    const handleEditTaskCancel = (id) => {
+        if (id === "new-task") {
+            cancelNewTask();
+        } else {
+            cancelEditTask();
+        };
+    }
 
     const confirmNewTask = (name, date, priority, project, description) => {
         taskManager.addTask(name, date, priority, project, description);
-        displayTasks();
-        initTaskButtons();
     };
 
     const cancelNewTask = () => {
         document.querySelector(".add-task").remove();
     };
 
-    const confirmTaskEdit = () => {
-        
+    const confirmEditTask = (id, name, date, priority, project, desc) => {
+        taskManager.editTask(id, name, date, priority, project, desc);
     };
 
-    const cancelTaskEdit = () => {
-        
+    const cancelEditTask = () => {
+        displayTasks();
+        initTaskButtons();
     };
 
     const deleteTask = (id) => {
@@ -328,6 +372,7 @@ export function UI() {
         taskManager.deleteProject(id);
         document.querySelector("#" + id).remove();
         displayTasks();
+        initTaskButtons();
     };
 
     const displayProjects = () => {
@@ -336,34 +381,7 @@ export function UI() {
         projectsDiv.textContent = "";
 
         projects.forEach((project) => {
-            const listItem = document.createElement("li");
-            listItem.id = project.getID();
-            listItem.classList.add("sidebar-item");
-            listItem.classList.add("project");
-
-            const projectName = document.createElement("span");
-            projectName.classList.add("proj-name");
-            projectName.textContent = project.name;
-
-            const buttonGroup = document.createElement("span");
-            buttonGroup.classList.add("btn-grp");
-
-            const editButton = document.createElement("button");
-            editButton.classList.add("icon-btn");
-            editButton.classList.add("edit");
-            editButton.classList.add("proj-edit");
-
-            const deleteButton = document.createElement("button");
-            deleteButton.classList.add("icon-btn");
-            deleteButton.classList.add("delete");
-            deleteButton.classList.add("proj-delete");
-
-            buttonGroup.appendChild(editButton);
-            buttonGroup.appendChild(deleteButton);
-
-            listItem.appendChild(projectName);
-            listItem.appendChild(buttonGroup);
-
+            const listItem = getProjectHTML(project);
             projectsDiv.appendChild(listItem);
         });
     };
@@ -374,57 +392,92 @@ export function UI() {
         tasksDiv.textContent = "";
 
         tasks.forEach((task) => {
-            const taskDiv = document.createElement("div");
-            taskDiv.id = task.getID();
-            taskDiv.classList.add("task")
-
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.id = task.getID();
-            checkbox.name = task.getID();
-            checkbox.value = "complete"
-
-            const taskBox = document.createElement("div");
-            taskBox.classList.add("task-box");
-
-            const title = document.createElement("span");
-            title.classList.add("task-name");
-            title.textContent = task.title;
-
-            const dueDate = document.createElement("span");
-            dueDate.classList.add("task-due");
-            dueDate.textContent = format(task.dueDate, "PPP");
-
-            taskBox.appendChild(title);
-            taskBox.appendChild(dueDate);
-
-            const buttonGroup = document.createElement("div");
-            buttonGroup.classList.add("btn-grp");
-
-            const editButton = document.createElement("button");
-            editButton.classList.add("icon-btn");
-            editButton.classList.add("edit");
-            editButton.classList.add("task-edit");
-
-            const deleteButton = document.createElement("button");
-            deleteButton.classList.add("icon-btn");
-            deleteButton.classList.add("delete");
-            deleteButton.classList.add("task-delete");
-
-            buttonGroup.appendChild(editButton);
-            buttonGroup.appendChild(deleteButton);
-
-            taskDiv.appendChild(checkbox);
-            taskDiv.appendChild(taskBox);
-            taskDiv.appendChild(buttonGroup);
-
+            const taskDiv = getTaskHTML(task);
             tasksDiv.appendChild(taskDiv);
         })
     };
+
+    const getProjectHTML = (project) => {
+        const listItem = document.createElement("li");
+        listItem.id = project.getID();
+        listItem.classList.add("sidebar-item");
+        listItem.classList.add("project");
+
+        const projectName = document.createElement("span");
+        projectName.classList.add("proj-name");
+        projectName.textContent = project.name;
+
+        const buttonGroup = document.createElement("span");
+        buttonGroup.classList.add("btn-grp");
+
+        const editButton = document.createElement("button");
+        editButton.classList.add("icon-btn");
+        editButton.classList.add("edit");
+        editButton.classList.add("proj-edit");
+
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("icon-btn");
+        deleteButton.classList.add("delete");
+        deleteButton.classList.add("proj-delete");
+
+        buttonGroup.appendChild(editButton);
+        buttonGroup.appendChild(deleteButton);
+
+        listItem.appendChild(projectName);
+        listItem.appendChild(buttonGroup);
+
+        return listItem;
+    }
+
+    const getTaskHTML = (task) => {
+        const taskDiv = document.createElement("div");
+        taskDiv.id = task.getID();
+        taskDiv.classList.add("task")
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = task.getID();
+        checkbox.name = task.getID();
+        checkbox.value = "complete"
+
+        const taskBox = document.createElement("div");
+        taskBox.classList.add("task-box");
+
+        const title = document.createElement("span");
+        title.classList.add("task-name");
+        title.textContent = task.title;
+
+        const dueDate = document.createElement("span");
+        dueDate.classList.add("task-due");
+        dueDate.textContent = format(task.dueDate, "PPP");
+
+        taskBox.appendChild(title);
+        taskBox.appendChild(dueDate);
+
+        const buttonGroup = document.createElement("div");
+        buttonGroup.classList.add("btn-grp");
+
+        const editButton = document.createElement("button");
+        editButton.classList.add("icon-btn");
+        editButton.classList.add("edit");
+        editButton.classList.add("task-edit");
+
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("icon-btn");
+        deleteButton.classList.add("delete");
+        deleteButton.classList.add("task-delete");
+
+        buttonGroup.appendChild(editButton);
+        buttonGroup.appendChild(deleteButton);
+
+        taskDiv.appendChild(checkbox);
+        taskDiv.appendChild(taskBox);
+        taskDiv.appendChild(buttonGroup);
+
+        return taskDiv;
+    }
 
     displayProjects();
     displayTasks();
     initAllButtons();
 };
-
-// Work on adding/editing tasks

@@ -177,7 +177,7 @@ select:focus {
     filter: invert(25%) sepia(100%) saturate(7194%) hue-rotate(357deg) brightness(92%) contrast(119%);
 }
 
-#new-project {
+#new-project-btn {
     align-items: center;
     align-self: center;
     background-color: var(--blue-color);
@@ -194,12 +194,12 @@ select:focus {
     width: 90%;
 }
 
-#new-project:hover {
+#new-project-btn:hover {
     box-shadow: 0rem 0rem 0.5rem var(--blue-color);
     opacity: 0.9;
 }
 
-#new-project span {
+#new-project-btn span {
     font-size: 2rem;
     margin-bottom: 0.2rem;
 }
@@ -274,7 +274,7 @@ select:focus {
     grid-row: 2;
 }
 
-#new-task {
+#new-task-btn {
     background-color: var(--blue-color);
     border: none;
     border-radius: 50%;
@@ -289,7 +289,7 @@ select:focus {
     width: 3rem;
 }
 
-#new-task:hover {
+#new-task-btn:hover {
     box-shadow: 0rem 0rem 0.5rem var(--blue-color);
     opacity: 0.9;
 }

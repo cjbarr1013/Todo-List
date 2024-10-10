@@ -32,18 +32,18 @@
                         </li>
                     -->
                     <!--
-                        <li class="add-sidebar-item">
+                        <form id="new-project" class="add-sidebar-item">
                             <input type="text" id="proj-name" required>
                             <span class="btn-grp">
-                                <button class="icon-btn confirm proj-confirm"></button>
+                                <button type="submit" form="new-project" class="icon-btn confirm proj-confirm"></button>
                                 <button class="icon-btn cancel proj-cancel"></button>
                             </span>
-                        </li>
+                        </form>
                     --> 
                     </ul>
                 </div>
             </div>
-            <button id="new-project"><span>+</span>New Project</button>
+            <button id="new-project-btn"><span>+</span>New Project</button>
         </div>
         <div id="tasks">
         <!--
@@ -61,7 +61,7 @@
         -->
         <!--
             <div class="task add-task">
-                <input type="checkbox" id="task-1" name="task-1" disabled="disabled" value="complete">
+                <input type="checkbox" id="task-1" name="task-1" disabled="disabled">
                 <form id="edit-task" class="edit-task-box">
                     <input type="text" name="task-name" id="task-name" placeholder="Task name" required>
                     <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="task-due" id="task-due" placeholder="Due date" required>
@@ -86,6 +86,6 @@
         -->
         </div>
     </div>
-    <button id="new-task">+</button>
+    <button id="new-task-btn">+</button>
 </body>
 </html>
