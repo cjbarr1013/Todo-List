@@ -10,7 +10,24 @@ export function UI() {
     taskManager.addProject("General");
     taskManager.addProject("Work");
     taskManager.addProject("Home");
+    taskManager.addProject("General");
+    taskManager.addProject("Work");
+    taskManager.addProject("Home");
+    taskManager.addProject("Home");
+    taskManager.addProject("General");
+    taskManager.addProject("Work");
+    taskManager.addProject("Home");
+    taskManager.addProject("Work");
+    taskManager.addProject("Home");
+    
 
+    taskManager.addTask("First Task", new Date(2024, 8, 29), "high", "proj-1", "this is the description");
+    taskManager.addTask("Second Task", new Date(2024, 9, 11), "med", "proj-1", "this is the description");
+    taskManager.addTask("Third Task", new Date(2024, 9, 5), "med", "proj-1", "this is the description");
+    taskManager.addTask("Fourth Task", new Date(2024, 9, 8), "high", "proj-2", "this is the description");
+    taskManager.addTask("Fifth Task", new Date(2024, 9, 4), "low", "proj-2", "this is the description");
+    taskManager.addTask("Sixth Task", new Date(2024, 9, 12), "high", "proj-3", "this is the description");
+    taskManager.addTask("Seventh Task", new Date(2024, 9, 3), "low", "proj-3", "this is the description");
     taskManager.addTask("First Task", new Date(2024, 8, 29), "high", "proj-1", "this is the description");
     taskManager.addTask("Second Task", new Date(2024, 9, 11), "med", "proj-1", "this is the description");
     taskManager.addTask("Third Task", new Date(2024, 9, 5), "med", "proj-1", "this is the description");
@@ -79,9 +96,11 @@ export function UI() {
         const taskEdit = document.querySelectorAll(".task-edit");
         taskEdit.forEach((button) => {
             button.addEventListener("click", (e) => {
-                const id = button.closest("div.task").id;
-                handleEditTask(id);
-                e.stopPropagation();
+                if (!checkIfIDExists("task-name")) {
+                    const id = button.closest("div.task").id;
+                    handleEditTask(id);
+                    e.stopPropagation();
+                }
             });
         });
 
@@ -481,3 +500,9 @@ export function UI() {
     displayTasks();
     initAllButtons();
 };
+
+// Fix date input display in edit/add task
+// Fix date being one day behind selected date
+// Add priority colors
+// Add checkbox ability to fade out task if checked
+// Fix page issues that occur when too many tasks and too many projects
