@@ -228,13 +228,24 @@ select:focus {
 
 .task-box {
     align-items: center;
-    background-image: linear-gradient(to right, rgb(5, 116, 116), rgb(5, 116, 116) 1rem, transparent 1rem, transparent 100%);
     border: solid 0.5px black;
     border-radius: 0.5rem;
     display: flex;
     flex: 1 1 100%;
     gap: 1rem;
     padding: 0.5rem 1.5rem;
+}
+
+.high-priority {
+    background-image: linear-gradient(to right, rgb(255, 0, 0), rgb(255, 0, 0) 1rem, transparent 1rem, transparent 100%);
+}
+
+.med-priority {
+    background-image: linear-gradient(to right, rgb(255, 128, 0), rgb(255, 128, 0) 1rem, transparent 1rem, transparent 100%);
+}
+
+.low-priority {
+    background-image: linear-gradient(to right, rgb(255, 255, 0), rgb(255, 255, 0) 1rem, transparent 1rem, transparent 100%);
 }
 
 .task-name {

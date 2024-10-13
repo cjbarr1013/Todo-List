@@ -22,7 +22,7 @@ export function UI() {
     
 
     taskManager.addTask("First Task", new Date(2024, 8, 29), "high", "proj-1", "this is the description");
-    taskManager.addTask("Second Task", new Date(2024, 9, 11), "med", "proj-1", "this is the description");
+    taskManager.addTask("Second Task", new Date(2024, 9, 11), "low", "proj-1", "this is the description");
     taskManager.addTask("Third Task", new Date(2024, 9, 5), "med", "proj-1", "this is the description");
     taskManager.addTask("Fourth Task", new Date(2024, 9, 8), "high", "proj-2", "this is the description");
     taskManager.addTask("Fifth Task", new Date(2024, 9, 4), "low", "proj-2", "this is the description");
@@ -32,7 +32,7 @@ export function UI() {
     taskManager.addTask("Second Task", new Date(2024, 9, 11), "med", "proj-1", "this is the description");
     taskManager.addTask("Third Task", new Date(2024, 9, 5), "med", "proj-1", "this is the description");
     taskManager.addTask("Fourth Task", new Date(2024, 9, 8), "high", "proj-2", "this is the description");
-    taskManager.addTask("Fifth Task", new Date(2024, 9, 4), "low", "proj-2", "this is the description");
+    taskManager.addTask("Fifth Task", new Date(2024, 9, 4), "med", "proj-2", "this is the description");
     taskManager.addTask("Sixth Task", new Date(2024, 9, 12), "high", "proj-3", "this is the description");
     taskManager.addTask("Seventh Task", new Date(2024, 9, 3), "low", "proj-3", "this is the description");
 
@@ -475,6 +475,14 @@ export function UI() {
 
         const taskBox = document.createElement("div");
         taskBox.classList.add("task-box");
+
+        if (task.priority === "high") {
+            taskBox.classList.add("high-priority");
+        } else if (task.priority === "med") {
+            taskBox.classList.add("med-priority");
+        } else {
+            taskBox.classList.add("low-priority");
+        };
 
         const title = document.createElement("span");
         title.classList.add("task-name");
