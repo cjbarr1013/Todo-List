@@ -302,13 +302,18 @@ export function UI() {
         defaultProjectOption.textContent = "Choose project";
         projectInput.appendChild(defaultProjectOption);
 
-        for (const project of taskManager.getAllProjects()) {
+        for (const proj of taskManager.getAllProjects()) {
             const projectOption = document.createElement("option");
-            projectOption.value = project.getID();
-            projectOption.textContent = project.name;
+            projectOption.value = proj.getID();
+            projectOption.textContent = proj.name;
             projectInput.appendChild(projectOption);
         }
-        projectInput.value = project;
+
+        if (project === "") {
+            projectInput.value = checkIfProjectSelected() ? activeSidebarID : "";
+        } else {
+            projectInput.value = project;
+        };
 
         const descriptionInput = document.createElement("textarea");
         descriptionInput.name = "task-desc";
@@ -344,6 +349,15 @@ export function UI() {
         taskDiv.appendChild(buttonGroup);
 
         return taskDiv;
+    };
+
+    const checkIfProjectSelected = () => {
+        const generalSidebarIDs = ["all", "today", "week"];
+        if (generalSidebarIDs.includes(activeSidebarID)) {
+            return false;
+        } else {
+            return true;
+        };
     };
 
     const handleEditTaskSubmit = (taskID, name, date, priority, project, desc) => {
@@ -505,4 +519,4 @@ export function UI() {
 // Fix date being one day behind selected date
 // Add priority colors
 // Add checkbox ability to fade out task if checked
-// Fix page issues that occur when too many tasks and too many projects
+// Add storage
