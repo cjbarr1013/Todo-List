@@ -525,6 +525,5 @@ export function UI() {
 
 // Fix date input display in edit/add task
 // Fix date being one day behind selected date
-// Add priority colors
 // Add checkbox ability to fade out task if checked
 // Add storage
