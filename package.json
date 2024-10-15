@@ -23,6 +23,7 @@
     "webpack-merge": "^6.0.1"
   },
   "dependencies": {
+    "@date-fns/tz": "^1.1.2",
     "date-fns": "^3.6.0"
   }
 }

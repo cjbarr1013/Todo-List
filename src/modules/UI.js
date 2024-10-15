@@ -1,6 +1,4 @@
 import { format } from "date-fns";
-import { Task } from "./Task.js"
-import { Project } from "./Project.js"
 import { Manager } from "./Manager.js"
 
 export function UI() {
@@ -21,20 +19,20 @@ export function UI() {
     taskManager.addProject("Home");
     
 
-    taskManager.addTask("First Task", new Date(2024, 8, 29), "high", "proj-1", "this is the description");
-    taskManager.addTask("Second Task", new Date(2024, 9, 11), "low", "proj-1", "this is the description");
-    taskManager.addTask("Third Task", new Date(2024, 9, 5), "med", "proj-1", "this is the description");
-    taskManager.addTask("Fourth Task", new Date(2024, 9, 8), "high", "proj-2", "this is the description");
-    taskManager.addTask("Fifth Task", new Date(2024, 9, 4), "low", "proj-2", "this is the description");
-    taskManager.addTask("Sixth Task", new Date(2024, 9, 12), "high", "proj-3", "this is the description");
-    taskManager.addTask("Seventh Task", new Date(2024, 9, 3), "low", "proj-3", "this is the description");
-    taskManager.addTask("First Task", new Date(2024, 8, 29), "high", "proj-1", "this is the description");
-    taskManager.addTask("Second Task", new Date(2024, 9, 11), "med", "proj-1", "this is the description");
-    taskManager.addTask("Third Task", new Date(2024, 9, 5), "med", "proj-1", "this is the description");
-    taskManager.addTask("Fourth Task", new Date(2024, 9, 8), "high", "proj-2", "this is the description");
-    taskManager.addTask("Fifth Task", new Date(2024, 9, 4), "med", "proj-2", "this is the description");
-    taskManager.addTask("Sixth Task", new Date(2024, 9, 12), "high", "proj-3", "this is the description");
-    taskManager.addTask("Seventh Task", new Date(2024, 9, 3), "low", "proj-3", "this is the description");
+    taskManager.addTask("First Task", "2024-10-29", "high", "proj-1", "this is the description");
+    taskManager.addTask("Second Task", "2024-11-12", "low", "proj-1", "this is the description");
+    taskManager.addTask("Third Task", "2024-10-23", "med", "proj-1", "this is the description");
+    taskManager.addTask("Fourth Task", "2024-10-30", "high", "proj-2", "this is the description");
+    taskManager.addTask("Fifth Task", "2024-10-25", "low", "proj-2", "this is the description");
+    taskManager.addTask("Sixth Task", "2024-10-31", "high", "proj-3", "this is the description");
+    taskManager.addTask("Seventh Task", "2024-11-16", "low", "proj-3", "this is the description");
+    taskManager.addTask("First Task", "2024-10-30", "high", "proj-1", "this is the description");
+    taskManager.addTask("Second Task", "2024-11-06", "med", "proj-1", "this is the description");
+    taskManager.addTask("Third Task", "2024-10-21", "med", "proj-1", "this is the description");
+    taskManager.addTask("Fourth Task", "2024-11-09", "high", "proj-2", "this is the description");
+    taskManager.addTask("Fifth Task", "2024-11-29", "med", "proj-2", "this is the description");
+    taskManager.addTask("Sixth Task", "2024-10-29", "high", "proj-3", "this is the description");
+    taskManager.addTask("Seventh Task", "2024-11-02", "low", "proj-3", "this is the description");
 
     const initConstButtons = () => {
         const byDueDate = document.querySelectorAll(".by-due-date");
@@ -220,7 +218,7 @@ export function UI() {
             const taskObj = taskManager.getTaskByID(id);
             const task = taskObj["task"];
             const projID = taskObj["projID"];
-            taskDiv.replaceWith(getEditTaskHTML(id, task.title, task.dueDate,
+            taskDiv.replaceWith(getEditTaskHTML(id, task.title, task.getDueDate(),
                                                 task.priority, projID, 
                                                 task.description));
         };
@@ -228,7 +226,7 @@ export function UI() {
         document.querySelector("#task-name").focus();
     };
 
-    const getEditTaskHTML = (id, name = "", date = new Date(), priority = "",
+    const getEditTaskHTML = (id, name = "", date = "", priority = "",
                              project = "", desc = "") => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task", "add-task");
@@ -260,7 +258,8 @@ export function UI() {
         dateInput.type = "text";
         dateInput.name = "task-due";
         dateInput.id = "task-due";
-        dateInput.value = format(date, "P");
+        dateInput.placeholder = "Due date";
+        dateInput.value = date !== "" ? format(date, "yyyy-MM-dd") : "";
         dateInput.setAttribute("onfocus", "(this.type='date')")
         dateInput.setAttribute("onblur", "(this.type='text')")
         dateInput.required = true;
@@ -490,7 +489,7 @@ export function UI() {
 
         const dueDate = document.createElement("span");
         dueDate.classList.add("task-due");
-        dueDate.textContent = format(task.dueDate, "PPP");
+        dueDate.textContent = format(task.getDueDate(), "PPP");
 
         taskBox.appendChild(title);
         taskBox.appendChild(dueDate);
@@ -523,7 +522,5 @@ export function UI() {
     initAllButtons();
 };
 
-// Fix date input display in edit/add task
-// Fix date being one day behind selected date
 // Add checkbox ability to fade out task if checked
 // Add storage

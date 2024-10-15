@@ -13,9 +13,9 @@ export function Manager() {
         return allTasks;
     };
 
-    const getTodaysTasks = () => getAllTasks().filter((task) => isToday(task.dueDate));
+    const getTodaysTasks = () => getAllTasks().filter((task) => isToday(task.getDueDate()));
 
-    const getWeeksTasks = () => getAllTasks().filter((task) => isSameWeek(new Date(), task.dueDate));
+    const getWeeksTasks = () => getAllTasks().filter((task) => isSameWeek(new Date(), task.getDueDate()));
 
     const getTasksByProjectID = (id) => {
         const tasks = {};
@@ -80,9 +80,10 @@ export function Manager() {
 
         task.title = name;
         task.description = description;
-        task.dueDate = due;
+        task.changeDueDate(due);
         task.priority = priority;
 
+        // Move task to new project, if applicable
         if (oldProjID !== projectID) {
             const oldProj = getProjectByID(oldProjID);
             oldProj.removeTask(task);
