@@ -249,6 +249,12 @@ select:focus {
     background-image: linear-gradient(to right, rgb(255, 255, 0), rgb(255, 255, 0) 1rem, transparent 1rem, transparent 100%);
 }
 
+.complete {
+    background-color: rgba(129, 129, 129, 0.5);
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
 .task-name {
     font-weight: 500;
     overflow: hidden;

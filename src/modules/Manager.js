@@ -116,6 +116,12 @@ export function Manager() {
         allProjects.splice(index, 1);
     };
 
+    const toggleTaskComplete = (taskID) => {
+        const taskObj = getTaskByID(taskID);
+        const task = taskObj["task"];
+        task.toggleComplete();
+    }
+
     return {
         getTasksByProjectID,
         getAllProjects,
@@ -126,6 +132,7 @@ export function Manager() {
         editTask,
         editProject,
         deleteTask,
-        deleteProject
+        deleteProject,
+        toggleTaskComplete
     };
 };

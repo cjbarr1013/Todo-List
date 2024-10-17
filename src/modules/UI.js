@@ -8,31 +8,21 @@ export function UI() {
     taskManager.addProject("General");
     taskManager.addProject("Work");
     taskManager.addProject("Home");
-    taskManager.addProject("General");
-    taskManager.addProject("Work");
-    taskManager.addProject("Home");
-    taskManager.addProject("Home");
-    taskManager.addProject("General");
-    taskManager.addProject("Work");
-    taskManager.addProject("Home");
-    taskManager.addProject("Work");
-    taskManager.addProject("Home");
-    
-
+    taskManager.addProject("Secret Project");
     taskManager.addTask("First Task", "2024-10-29", "high", "proj-1", "this is the description");
     taskManager.addTask("Second Task", "2024-11-12", "low", "proj-1", "this is the description");
     taskManager.addTask("Third Task", "2024-10-23", "med", "proj-1", "this is the description");
-    taskManager.addTask("Fourth Task", "2024-10-30", "high", "proj-2", "this is the description");
+    taskManager.addTask("Fourth Task", "2024-10-30", "high", "proj-1", "this is the description");
     taskManager.addTask("Fifth Task", "2024-10-25", "low", "proj-2", "this is the description");
-    taskManager.addTask("Sixth Task", "2024-10-31", "high", "proj-3", "this is the description");
-    taskManager.addTask("Seventh Task", "2024-11-16", "low", "proj-3", "this is the description");
-    taskManager.addTask("First Task", "2024-10-30", "high", "proj-1", "this is the description");
-    taskManager.addTask("Second Task", "2024-11-06", "med", "proj-1", "this is the description");
-    taskManager.addTask("Third Task", "2024-10-21", "med", "proj-1", "this is the description");
-    taskManager.addTask("Fourth Task", "2024-11-09", "high", "proj-2", "this is the description");
-    taskManager.addTask("Fifth Task", "2024-11-29", "med", "proj-2", "this is the description");
-    taskManager.addTask("Sixth Task", "2024-10-29", "high", "proj-3", "this is the description");
-    taskManager.addTask("Seventh Task", "2024-11-02", "low", "proj-3", "this is the description");
+    taskManager.addTask("Sixth Task", "2024-10-31", "high", "proj-2", "this is the description");
+    taskManager.addTask("Seventh Task", "2024-11-16", "low", "proj-2", "this is the description");
+    taskManager.addTask("Eighth Task", "2024-10-30", "high", "proj-3", "this is the description");
+    taskManager.addTask("Ninth Task", "2024-11-06", "med", "proj-3", "this is the description");
+    taskManager.addTask("Tenth Task", "2024-10-21", "med", "proj-3", "this is the description");
+    taskManager.addTask("Eleventh Task", "2024-11-09", "high", "proj-4", "this is the description");
+    taskManager.addTask("Twelth Task", "2024-11-29", "med", "proj-4", "this is the description");
+    taskManager.addTask("Thirteenth Task", "2024-10-29", "high", "proj-4", "this is the description");
+    taskManager.addTask("Fourteenth Task", "2024-11-02", "low", "proj-4", "this is the description");
 
     const initConstButtons = () => {
         const byDueDate = document.querySelectorAll(".by-due-date");
@@ -41,6 +31,7 @@ export function UI() {
                 activeSidebarID = item.id;
                 displayTasks();
                 initTaskButtons();
+                initCheckboxes();
             });
         });
 
@@ -66,6 +57,7 @@ export function UI() {
                 activeSidebarID = project.id;
                 displayTasks();
                 initTaskButtons();
+                initCheckboxes();
             });
         });
 
@@ -112,10 +104,21 @@ export function UI() {
         });
     };
 
-    const initAllButtons = () => {
+    const initCheckboxes = () => {
+        const checkboxes = document.querySelectorAll("input[type=checkbox]");
+        checkboxes.forEach((box) => {
+            box.addEventListener('change', () => {
+                taskManager.toggleTaskComplete(box.value);
+                handleCheckbox(box.value);
+            })
+        })
+    }
+
+    const initInteractiveElements = () => {
         initConstButtons();
         initProjectButtons();
         initTaskButtons();
+        initCheckboxes();
     };
 
     const checkIfIDExists = (id) => {
@@ -233,7 +236,6 @@ export function UI() {
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.value = "complete";
         checkbox.disabled = "disabled";
 
         const taskBox = document.createElement("form");
@@ -368,6 +370,7 @@ export function UI() {
 
         displayTasks();
         initTaskButtons();
+        initCheckboxes();
     };
 
     const handleEditTaskCancel = (id) => {
@@ -393,6 +396,7 @@ export function UI() {
     const cancelEditTask = () => {
         displayTasks();
         initTaskButtons();
+        initCheckboxes();
     };
 
     const deleteTask = (id) => {
@@ -405,6 +409,7 @@ export function UI() {
         document.querySelector("#" + id).remove();
         displayTasks();
         initTaskButtons();
+        initCheckboxes();
     };
 
     const displayProjects = () => {
@@ -468,9 +473,7 @@ export function UI() {
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.id = task.getID();
-        checkbox.name = task.getID();
-        checkbox.value = "complete"
+        checkbox.value = task.getID();
 
         const taskBox = document.createElement("div");
         taskBox.classList.add("task-box");
@@ -481,6 +484,11 @@ export function UI() {
             taskBox.classList.add("med-priority");
         } else {
             taskBox.classList.add("low-priority");
+        };
+
+        if (task.isComplete()) {
+            taskBox.classList.add("complete");
+            checkbox.checked = true;
         };
 
         const title = document.createElement("span");
@@ -517,9 +525,22 @@ export function UI() {
         return taskDiv;
     }
 
+    const handleCheckbox = (taskID) => {
+        const taskObj = taskManager.getTaskByID(taskID);
+        const task = taskObj["task"];
+        const taskDiv = document.querySelector("#" + taskID);
+        const taskBox = taskDiv.querySelector(".task-box");
+
+        if (task.isComplete()) {
+            taskBox.classList.add("complete");
+        } else {
+            taskBox.classList.remove("complete");
+        };
+    };
+
     displayProjects();
     displayTasks();
-    initAllButtons();
+    initInteractiveElements();
 };
 
 // Add checkbox ability to fade out task if checked
