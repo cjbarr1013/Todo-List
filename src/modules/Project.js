@@ -1,6 +1,4 @@
-export function Project(name, id) {
-    let tasks = [];
-
+export function Project(name, id, tasks = []) {
     const getID = () => id;
 
     const getTasks = () => tasks;

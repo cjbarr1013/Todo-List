@@ -1,5 +1,8 @@
 :root {
     --blue-color: #06f;
+    --high-color: rgb(0, 45, 113);
+    --med-color: rgb(0, 94, 235);
+    --low-color: rgb(104, 164, 255);
     --sidebar-font-size: 1.2rem;
     --sidebar-font-weight: 500;
 }
@@ -103,7 +106,8 @@ select:focus {
     flex-direction: column;
     justify-content: space-between;
     gap: 1rem;
-    overflow: hidden;
+    min-width: 165px;
+    overflow: auto;
     padding-bottom: 1rem;
 }
 
@@ -111,6 +115,7 @@ select:focus {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    height: 100%;
     padding-top: 1rem;
     overflow: auto;
 }
@@ -238,15 +243,15 @@ select:focus {
 }
 
 .high-priority {
-    background-image: linear-gradient(to right, rgb(255, 0, 0), rgb(255, 0, 0) 1rem, transparent 1rem, transparent 100%);
+    background-image: linear-gradient(to right, var(--high-color), var(--high-color) 1rem, transparent 1rem, transparent 100%);
 }
 
 .med-priority {
-    background-image: linear-gradient(to right, rgb(255, 128, 0), rgb(255, 128, 0) 1rem, transparent 1rem, transparent 100%);
+    background-image: linear-gradient(to right, var(--med-color), var(--med-color) 1rem, transparent 1rem, transparent 100%);
 }
 
 .low-priority {
-    background-image: linear-gradient(to right, rgb(255, 255, 0), rgb(255, 255, 0) 1rem, transparent 1rem, transparent 100%);
+    background-image: linear-gradient(to right, var(--low-color), var(--low-color) 1rem, transparent 1rem, transparent 100%);
 }
 
 .complete {

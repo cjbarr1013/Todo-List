@@ -1,37 +1,14 @@
 import { format } from "date-fns";
-import { Manager } from "./Manager.js"
 
-export function UI() {
-    const taskManager = Manager();
+export function UI(taskManager) {
     let activeSidebarID = "all";
-
-    taskManager.addProject("General");
-    taskManager.addProject("Work");
-    taskManager.addProject("Home");
-    taskManager.addProject("Secret Project");
-    taskManager.addTask("First Task", "2024-10-29", "high", "proj-1", "this is the description");
-    taskManager.addTask("Second Task", "2024-11-12", "low", "proj-1", "this is the description");
-    taskManager.addTask("Third Task", "2024-10-23", "med", "proj-1", "this is the description");
-    taskManager.addTask("Fourth Task", "2024-10-30", "high", "proj-1", "this is the description");
-    taskManager.addTask("Fifth Task", "2024-10-25", "low", "proj-2", "this is the description");
-    taskManager.addTask("Sixth Task", "2024-10-31", "high", "proj-2", "this is the description");
-    taskManager.addTask("Seventh Task", "2024-11-16", "low", "proj-2", "this is the description");
-    taskManager.addTask("Eighth Task", "2024-10-30", "high", "proj-3", "this is the description");
-    taskManager.addTask("Ninth Task", "2024-11-06", "med", "proj-3", "this is the description");
-    taskManager.addTask("Tenth Task", "2024-10-21", "med", "proj-3", "this is the description");
-    taskManager.addTask("Eleventh Task", "2024-11-09", "high", "proj-4", "this is the description");
-    taskManager.addTask("Twelth Task", "2024-11-29", "med", "proj-4", "this is the description");
-    taskManager.addTask("Thirteenth Task", "2024-10-29", "high", "proj-4", "this is the description");
-    taskManager.addTask("Fourteenth Task", "2024-11-02", "low", "proj-4", "this is the description");
 
     const initConstButtons = () => {
         const byDueDate = document.querySelectorAll(".by-due-date");
         byDueDate.forEach((item) => {
             item.addEventListener("click", () => {
                 activeSidebarID = item.id;
-                displayTasks();
-                initTaskButtons();
-                initCheckboxes();
+                refreshTasks();
             });
         });
 
@@ -55,9 +32,7 @@ export function UI() {
         projects.forEach((project) => {
             project.addEventListener("click", () => {
                 activeSidebarID = project.id;
-                displayTasks();
-                initTaskButtons();
-                initCheckboxes();
+                refreshTasks();
             });
         });
 
@@ -183,8 +158,7 @@ export function UI() {
             confirmEditProject(name, id);
         };
 
-        displayProjects();
-        initProjectButtons();
+        refreshProjects();
     };
 
     const handleEditProjectCancel = (id) => {
@@ -208,8 +182,7 @@ export function UI() {
     };
 
     const cancelEditProject = () => {
-        displayProjects();
-        initProjectButtons();
+        refreshProjects();
     };
 
     const handleEditTask = (id) => {
@@ -368,9 +341,7 @@ export function UI() {
             confirmEditTask(taskID, name, date, priority, project, desc);
         };
 
-        displayTasks();
-        initTaskButtons();
-        initCheckboxes();
+        refreshTasks();
     };
 
     const handleEditTaskCancel = (id) => {
@@ -394,9 +365,7 @@ export function UI() {
     };
 
     const cancelEditTask = () => {
-        displayTasks();
-        initTaskButtons();
-        initCheckboxes();
+        refreshTasks();
     };
 
     const deleteTask = (id) => {
@@ -407,9 +376,7 @@ export function UI() {
     const deleteProject = (id) => {
         taskManager.deleteProject(id);
         document.querySelector("#" + id).remove();
-        displayTasks();
-        initTaskButtons();
-        initCheckboxes();
+        refreshTasks();
     };
 
     const displayProjects = () => {
@@ -538,10 +505,26 @@ export function UI() {
         };
     };
 
-    displayProjects();
-    displayTasks();
-    initInteractiveElements();
+    const refreshProjects = () => {
+        displayProjects();
+        initProjectButtons();
+    };
+
+    const refreshTasks = () => {
+        displayTasks();
+        initTaskButtons();
+        initCheckboxes();
+    };
+
+    const initDisplay = () => {
+        displayProjects();
+        displayTasks();
+        initInteractiveElements();
+    };
+
+    return {
+        initDisplay
+    };
 };
 
-// Add checkbox ability to fade out task if checked
 // Add storage

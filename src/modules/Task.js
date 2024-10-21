@@ -1,9 +1,9 @@
-export function Task(title, description, date, priority, id) {
-    let complete = false;
-    
+export function Task(title, description, date, priority, id, complete = false) {
     const changeDueDate = (newDate) => date = newDate;
 
     const getDueDate = () => convertToLocalDate(date);
+
+    const getDueDateStr = () => date;
 
     const convertToLocalDate = (dateStr) => {
         const [year, month, day] = dateStr.split('-');
@@ -22,6 +22,7 @@ export function Task(title, description, date, priority, id) {
         priority,
         changeDueDate,
         getDueDate,
+        getDueDateStr,
         toggleComplete,
         isComplete,
         getID
